@@ -14,13 +14,9 @@ void RobotKinematicsProvider::_callback_desired_pose(const geometry_msgs::PoseSt
 }
 
 RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &node_handle, const std::string &topic_prefix):
-    enabled_(false),
-    topic_prefix_(topic_prefix),
-    desired_pose_(0)
+    RobotKinematicsProvider(node_handle, node_handle, topic_prefix)
 {
-    ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsProvider with prefix " + topic_prefix);
-    subscriber_desired_pose_ = node_handle.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
-    publisher_pose_ = node_handle.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/get/pose", 1);
+    //Delegated to RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_publisher, ros::NodeHandle &nodehandle_subscriber, const std::string &topic_prefix)
 }
 
 RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_publisher, ros::NodeHandle &nodehandle_subscriber, const std::string &topic_prefix):
@@ -29,10 +25,6 @@ RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_pub
     desired_pose_(0)
 {
     ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsProvider with prefix " + topic_prefix);
-    //The callback queue needs to be defined before the nodehandle is used (with subscribe or advertise), otherwise it doesn't work
-    nodehandle_subscriber.setCallbackQueue(&subscriber_callback_queue_);
-    nodehandle_publisher.setCallbackQueue(&publisher_callback_queue_);
-
     subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
     publisher_pose_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/get/pose", 1);
 }

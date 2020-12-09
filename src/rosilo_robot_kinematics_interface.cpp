@@ -15,14 +15,9 @@ void RobotKinematicsInterface::_callback_pose(const geometry_msgs::PoseStamped::
 
 
 RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle, const std::string &topic_prefix):
-    enabled_(false),
-    topic_prefix_(topic_prefix),
-    pose_(0)
+    RobotKinematicsInterface(node_handle, node_handle, topic_prefix)
 {
-    ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsInterface with prefix " + topic_prefix);
-    subscriber_pose_ = node_handle.subscribe(topic_prefix + "get/pose", 1, &RobotKinematicsInterface::_callback_pose, this);
-     publisher_desired_pose_ = node_handle.advertise<geometry_msgs::PoseStamped>(topic_prefix + "set/desired_pose", 1);
-    publisher_desired_gripper_state_ = node_handle.advertise<std_msgs::Float64>(topic_prefix + "set/desired_gripper_state", 1);
+    //Delegated to RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle_publisher, ros::NodeHandle &node_handle_subscriber, const std::string &topic_prefix)
 }
 
 RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle_publisher, ros::NodeHandle &node_handle_subscriber, const std::string &topic_prefix):
