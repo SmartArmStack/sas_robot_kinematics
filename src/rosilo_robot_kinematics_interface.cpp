@@ -29,6 +29,7 @@ RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle_
     subscriber_pose_ = node_handle_subscriber.subscribe(topic_prefix + "get/pose", 1, &RobotKinematicsInterface::_callback_pose, this);
     publisher_desired_pose_ = node_handle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "set/desired_pose", 1);
     publisher_desired_gripper_state_ = node_handle_publisher.advertise<std_msgs::Float64>(topic_prefix + "set/desired_gripper_state", 1);
+    publisher_desired_interpolator_speed_ = node_handle_publisher.advertise<std_msgs::Float64>(topic_prefix + "set/desired_interpolator_speed", 1);
 }
 
 bool RobotKinematicsInterface::is_enabled() const
@@ -51,6 +52,11 @@ DQ RobotKinematicsInterface::get_pose() const
 void RobotKinematicsInterface::send_desired_pose(const DQ &desired_pose) const
 {
     publisher_desired_pose_.publish(dq_to_geometry_msgs_pose_stamped(desired_pose));
+}
+
+void RobotKinematicsInterface::send_desired_interpolator_speed(const double &interpolator_speed) const
+{
+    publisher_desired_interpolator_speed_.publish(double_to_std_msgs_float64(interpolator_speed));
 }
 
 }

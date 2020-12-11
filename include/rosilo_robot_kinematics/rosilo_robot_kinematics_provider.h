@@ -21,10 +21,13 @@ protected:
     ros::Subscriber subscriber_desired_pose_;
     DQ desired_pose_;
 
+    ros::Subscriber subscriber_desired_interpolator_speed_;
+    double desired_interpolator_speed_;
+
     ros::Publisher publisher_pose_;
 
     void _callback_desired_pose(const geometry_msgs::PoseStamped::ConstPtr& msg);
-
+    void _callback_desired_interpolator_speed(const std_msgs::Float64::ConstPtr& msg);
 public:
     RobotKinematicsProvider(const RobotKinematicsProvider&)=delete;
     RobotKinematicsProvider()=delete;
@@ -34,6 +37,7 @@ public:
 
     bool is_enabled() const;
     DQ get_desired_pose() const;
+    double get_desired_interpolator_speed() const;
     void send_pose(const DQ& pose) const;
 };
 }

@@ -13,6 +13,11 @@ void RobotKinematicsProvider::_callback_desired_pose(const geometry_msgs::PoseSt
     }
 }
 
+void RobotKinematicsProvider::_callback_desired_interpolator_speed(const std_msgs::Float64::ConstPtr &msg)
+{
+    desired_interpolator_speed_ = std_msgs_float64_to_double(*msg);
+}
+
 RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &node_handle, const std::string &topic_prefix):
     RobotKinematicsProvider(node_handle, node_handle, topic_prefix)
 {
@@ -25,8 +30,10 @@ RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_pub
     desired_pose_(0)
 {
     ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsProvider with prefix " + topic_prefix);
-    subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
     publisher_pose_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/get/pose", 1);
+
+    subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
+    subscriber_desired_interpolator_speed_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_interpolator_speed", 1, &RobotKinematicsProvider::_callback_desired_interpolator_speed, this);
 }
 
 bool RobotKinematicsProvider::is_enabled() const
@@ -44,6 +51,11 @@ DQ RobotKinematicsProvider::get_desired_pose() const
     {
         throw std::runtime_error(ros::this_node::getName() + "::Trying to get_desired_pose of an unitialized RobotKinematicsProvider.");
     }
+}
+
+double RobotKinematicsProvider::get_desired_interpolator_speed() const
+{
+    return desired_interpolator_speed_;
 }
 
 void RobotKinematicsProvider::send_pose(const DQ &pose) const
