@@ -30,10 +30,10 @@ RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_pub
     desired_pose_(0)
 {
     ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsProvider with prefix " + topic_prefix);
-    publisher_pose_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/get/pose", 1);
+    publisher_pose_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "get/pose", 1);
 
-    subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
-    subscriber_desired_interpolator_speed_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_interpolator_speed", 1, &RobotKinematicsProvider::_callback_desired_interpolator_speed, this);
+    subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
+    subscriber_desired_interpolator_speed_ = nodehandle_subscriber.subscribe(topic_prefix + "set/desired_interpolator_speed", 1, &RobotKinematicsProvider::_callback_desired_interpolator_speed, this);
 }
 
 bool RobotKinematicsProvider::is_enabled() const
