@@ -59,3 +59,4 @@ target_link_libraries(rosilo_robot_kinematics
     ${catkin_LIBRARIES}
     )
 
+catkin_python_setup()
