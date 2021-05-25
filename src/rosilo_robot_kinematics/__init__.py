@@ -46,7 +46,7 @@ class RobotKinematicsInterface:
 
         self.subscriber_pose_ = rospy.Subscriber(node_prefix + "get/pose",
                                                  PoseStamped,
-                                                 self._callback_joint_states)
+                                                 self._callback_pose)
 
     def is_enabled(self):
         if self.pose_ is not None:
@@ -67,4 +67,4 @@ class RobotKinematicsInterface:
         self.publisher_desired_interpolator_speed_.publish(rc.double_to_std_msgs_float64(desired_interpolator_speed))
 
     def _callback_pose(self, msg):
-        self.pose_ = rc.geometry_msgs_pose_to_dq(msg)
+        self.pose_ = rc.geometry_msgs_pose_stamped_to_dq(msg)
