@@ -10,7 +10,7 @@
 #include <dqrobotics/DQ.h>
 using namespace DQ_robotics;
 
-namespace rosilo
+namespace sas
 {
 class RobotKinematicsProvider
 {

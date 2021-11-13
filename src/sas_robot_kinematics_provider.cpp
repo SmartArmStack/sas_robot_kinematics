@@ -1,6 +1,6 @@
-#include <rosilo_robot_kinematics/rosilo_robot_kinematics_provider.h>
-#include <rosilo_conversions/rosilo_conversions.h>
-namespace rosilo
+#include <sas_robot_kinematics/sas_robot_kinematics_provider.h>
+#include <sas_conversions/sas_conversions.h>
+namespace sas
 {
 
 void RobotKinematicsProvider::_callback_desired_pose(const geometry_msgs::PoseStamped::ConstPtr &msg)
