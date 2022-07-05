@@ -23,6 +23,7 @@
 # ################################################################*/
 #include <sas_robot_kinematics/sas_robot_kinematics_interface.h>
 #include <sas_conversions/sas_conversions.h>
+#include <sas_common/sas_common.h>
 namespace sas
 {
 
@@ -41,6 +42,14 @@ void RobotKinematicsInterface::_callback_reference_frame(const geometry_msgs::Po
     reference_frame_ = geometry_msgs_pose_stamped_to_dq(msg);
 }
 
+#ifdef IS_SAS_PYTHON_BUILD
+RobotKinematicsInterface::RobotKinematicsInterface(const std::string &topic_prefix):
+    RobotKinematicsInterface(sas::common::get_static_node_handle(), topic_prefix)
+{
+    //Delegated to RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle_publisher, ros::NodeHandle &node_handle_subscriber, const std::string &topic_prefix)
+}
+#endif
+
 RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle, const std::string &topic_prefix):
     RobotKinematicsInterface(node_handle, node_handle, topic_prefix)
 {
@@ -54,10 +63,10 @@ RobotKinematicsInterface::RobotKinematicsInterface(ros::NodeHandle &node_handle_
     reference_frame_(0)
 {
     ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsInterface with prefix " + topic_prefix);
-    subscriber_pose_ = node_handle_subscriber.subscribe(topic_prefix + "get/pose", 1, &RobotKinematicsInterface::_callback_pose, this);
-    subscriber_reference_frame_ = node_handle_subscriber.subscribe(topic_prefix + "get/reference_frame", 1, &RobotKinematicsInterface::_callback_reference_frame, this);
-    publisher_desired_pose_ = node_handle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "set/desired_pose", 1);
-    publisher_desired_interpolator_speed_ = node_handle_publisher.advertise<std_msgs::Float64>(topic_prefix + "set/desired_interpolator_speed", 1);
+    subscriber_pose_ = node_handle_subscriber.subscribe(topic_prefix + "/get/pose", 1, &RobotKinematicsInterface::_callback_pose, this);
+    subscriber_reference_frame_ = node_handle_subscriber.subscribe(topic_prefix + "/get/reference_frame", 1, &RobotKinematicsInterface::_callback_reference_frame, this);
+    publisher_desired_pose_ = node_handle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/set/desired_pose", 1);
+    publisher_desired_interpolator_speed_ = node_handle_publisher.advertise<std_msgs::Float64>(topic_prefix + "/set/desired_interpolator_speed", 1);
 }
 
 bool RobotKinematicsInterface::is_enabled() const

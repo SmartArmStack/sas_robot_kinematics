@@ -23,6 +23,7 @@
 # ################################################################*/
 #include <sas_robot_kinematics/sas_robot_kinematics_provider.h>
 #include <sas_conversions/sas_conversions.h>
+#include <sas_common/sas_common.h>
 
 namespace sas
 {
@@ -43,17 +44,25 @@ RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &node_handle, c
     //Delegated to RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_publisher, ros::NodeHandle &nodehandle_subscriber, const std::string &topic_prefix)
 }
 
+#ifdef IS_SAS_PYTHON_BUILD
+RobotKinematicsProvider::RobotKinematicsProvider(const std::string& topic_prefix):
+    RobotKinematicsProvider(sas::common::get_static_node_handle(),topic_prefix)
+{
+    //Delegated
+}
+#endif
+
 RobotKinematicsProvider::RobotKinematicsProvider(ros::NodeHandle &nodehandle_publisher, ros::NodeHandle &nodehandle_subscriber, const std::string &topic_prefix):
     enabled_(false),
     topic_prefix_(topic_prefix),
     desired_pose_(0)
 {
     ROS_INFO_STREAM(ros::this_node::getName() + "::Initializing RobotKinematicsProvider with prefix " + topic_prefix);
-    publisher_pose_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "get/pose", 1);
-    publisher_reference_frame_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "get/reference_frame", 1);
+    publisher_pose_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/get/pose", 1);
+    publisher_reference_frame_ = nodehandle_publisher.advertise<geometry_msgs::PoseStamped>(topic_prefix + "/get/reference_frame", 1);
 
-    subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
-    subscriber_desired_interpolator_speed_ = nodehandle_subscriber.subscribe(topic_prefix + "set/desired_interpolator_speed", 1, &RobotKinematicsProvider::_callback_desired_interpolator_speed, this);
+    subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
+    subscriber_desired_interpolator_speed_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_interpolator_speed", 1, &RobotKinematicsProvider::_callback_desired_interpolator_speed, this);
 }
 
 bool RobotKinematicsProvider::is_enabled() const

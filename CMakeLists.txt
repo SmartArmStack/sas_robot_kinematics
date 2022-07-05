@@ -1,9 +1,16 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.0)
 project(sas_robot_kinematics)
+
+#Add custom (non compiling) targets so launch scripts and python files show up in QT Creator's project view.
+file(GLOB_RECURSE EXTRA_FILES */*)
+add_custom_target(${PROJECT_NAME}_OTHER_FILES ALL WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} SOURCES ${EXTRA_FILES})
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 add_compile_options(-Werror=return-type)
+
+FIND_PACKAGE(Eigen3 CONFIG REQUIRED)
+INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -11,7 +18,9 @@ add_compile_options(-Werror=return-type)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     rospy
+    pybind11_catkin
     sas_conversions
+    sas_common
     geometry_msgs
     )
 
@@ -27,7 +36,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES sas_robot_kinematics
-    CATKIN_DEPENDS sas_conversions roscpp rospy geometry_msgs
+    CATKIN_DEPENDS sas_conversions roscpp rospy geometry_msgs sas_common pybind11_catkin
     #  DEPENDS system_lib
     )
 
@@ -43,7 +52,7 @@ include_directories(
     )
 
 ## Declare a C++ library
-add_library(sas_robot_kinematics
+add_library(${PROJECT_NAME}
    src/sas_robot_kinematics_provider.cpp
    src/sas_robot_kinematics_interface.cpp
 )
@@ -59,6 +68,15 @@ target_link_libraries(sas_robot_kinematics
     ${catkin_LIBRARIES}
     )
     
+#####################
+## PYTHON BINDINGS ##
+#####################    
+pybind_add_module(_sas_robot_kinematics SHARED src/sas_robot_kinematics_py.cpp src/sas_robot_kinematics_interface.cpp src/sas_robot_kinematics_provider.cpp)
+target_compile_definitions(_sas_robot_kinematics PRIVATE IS_SAS_PYTHON_BUILD)
+# https://github.com/pybind/pybind11/issues/387
+target_link_libraries(_sas_robot_kinematics PRIVATE ${catkin_LIBRARIES} -ldqrobotics)
+
+
 #############
 ## Install ##
 #############
@@ -68,10 +86,10 @@ target_link_libraries(sas_robot_kinematics
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(PROGRAMS
+   scripts/sas_robot_kinematics_interface_example.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables and/or libraries for installation
 install(TARGETS ${PROJECT_NAME}

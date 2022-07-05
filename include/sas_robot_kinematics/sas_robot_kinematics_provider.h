@@ -58,6 +58,9 @@ public:
     RobotKinematicsProvider()=delete;
     RobotKinematicsProvider(const RobotKinematicsProvider&)=delete;
 
+#ifdef IS_SAS_PYTHON_BUILD
+    RobotKinematicsProvider(const std::string& topic_prefix);
+#endif
     RobotKinematicsProvider(ros::NodeHandle& node_handle, const std::string& topic_prefix);
     RobotKinematicsProvider(ros::NodeHandle& node_handle_publisher, ros::NodeHandle& node_handle_subscriber, const std::string& topic_prefix);
 

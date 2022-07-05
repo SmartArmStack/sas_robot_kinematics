@@ -50,7 +50,12 @@ private:
     void _callback_pose(const geometry_msgs::PoseStamped::ConstPtr& msg);
     void _callback_reference_frame(const geometry_msgs::PoseStamped& msg);
 public:
+    RobotKinematicsInterface()=delete;
     RobotKinematicsInterface(const RobotKinematicsInterface&)=delete;
+
+#ifdef IS_SAS_PYTHON_BUILD
+    RobotKinematicsInterface(const std::string& topic_prefix);
+#endif
     RobotKinematicsInterface(ros::NodeHandle& node_handle, const std::string& topic_prefix);
     RobotKinematicsInterface(ros::NodeHandle& node_handle_publisher, ros::NodeHandle& node_handle_subscriber, const std::string& topic_prefix);
 
