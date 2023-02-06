@@ -18,7 +18,7 @@
 #
 # ################################################################
 #
-#   Author: Murilo M. Marinho, email: murilo@nml.t.u-tokyo.ac.jp
+#   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #
 # ################################################################*/
 #include <sas_robot_kinematics/sas_robot_kinematics_provider.h>
