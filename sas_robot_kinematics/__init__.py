@@ -1,5 +1,5 @@
 """
-# Copyright (c) 2012-2021 Murilo Marques Marinho
+# Copyright (c) 2012-2023 Murilo Marques Marinho
 #
 #    This file is part of sas_robot_kinematics.
 #

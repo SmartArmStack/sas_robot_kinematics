@@ -58,18 +58,18 @@ install(
 
 ament_python_install_package(${PROJECT_NAME})
 
-pybind11_add_module(_sas_robot_driver SHARED src/sas_robot_kinematics_py.cpp src/sas_robot_kinematics_client.cpp src/sas_robot_kinematics_server.cpp)
+pybind11_add_module(_${PROJECT_NAME} SHARED src/sas_robot_kinematics_py.cpp src/sas_robot_kinematics_client.cpp src/sas_robot_kinematics_server.cpp)
 
-target_include_directories(_sas_robot_driver
+target_include_directories(_${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(_sas_robot_driver PRIVATE IS_SAS_PYTHON_BUILD)
+target_compile_definitions(_${PROJECT_NAME} PRIVATE IS_SAS_PYTHON_BUILD)
 # https://github.com/pybind/pybind11/issues/387
-target_link_libraries(_sas_robot_driver PRIVATE ${PROJECT_NAME} -ldqrobotics)
+target_link_libraries(_${PROJECT_NAME} PRIVATE ${PROJECT_NAME} -ldqrobotics)
 
-install(TARGETS _sas_robot_driver
+install(TARGETS _${PROJECT_NAME}
   DESTINATION "${PYTHON_INSTALL_DIR}/${PROJECT_NAME}"
 )
 
