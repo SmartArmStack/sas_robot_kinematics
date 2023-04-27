@@ -31,8 +31,8 @@
 #include <sas_robot_kinematics/sas_robot_kinematics_provider.h>
 
 namespace py = pybind11;
-using RKC = sas::RobotKinematicsInterface;
-using RKS = sas::RobotKinematicsProvider;
+using RKC = sas::RobotKinematicsClient;
+using RKS = sas::RobotKinematicsServer;
 
 PYBIND11_MODULE(_sas_robot_kinematics, m) {
 

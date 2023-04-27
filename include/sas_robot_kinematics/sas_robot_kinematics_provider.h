@@ -38,7 +38,7 @@ using namespace DQ_robotics;
 namespace sas
 {
 
-class RobotKinematicsProvider: private sas::Object
+class RobotKinematicsServer: private sas::Object
 {
 protected:
     std::shared_ptr<Node> node_;
@@ -57,13 +57,13 @@ protected:
     void _callback_desired_pose(const geometry_msgs::msg::PoseStamped& msg);
     void _callback_desired_interpolator_speed(const sas_msgs::msg::Float64& msg);
 public:
-    RobotKinematicsProvider()=delete;
-    RobotKinematicsProvider(const RobotKinematicsProvider&)=delete;
+    RobotKinematicsServer()=delete;
+    RobotKinematicsServer(const RobotKinematicsServer&)=delete;
 
 #ifdef IS_SAS_PYTHON_BUILD
-    RobotKinematicsProvider(const std::string& topic_prefix);
+    RobotKinematicsServer(const std::string& topic_prefix);
 #endif
-    RobotKinematicsProvider(const std::shared_ptr<Node>& node, const std::string& topic_prefix);
+    RobotKinematicsServer(const std::shared_ptr<Node>& node, const std::string& topic_prefix);
 
     DQ get_desired_pose() const;
     double get_desired_interpolator_speed() const;

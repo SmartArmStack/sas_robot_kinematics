@@ -29,7 +29,7 @@ using std::placeholders::_1;
 namespace sas
 {
 
-void RobotKinematicsInterface::_callback_pose(const geometry_msgs::msg::PoseStamped &msg)
+void RobotKinematicsClient::_callback_pose(const geometry_msgs::msg::PoseStamped &msg)
 {
     pose_ = geometry_msgs_pose_to_dq(msg.pose);
     if(! enabled_)
@@ -40,7 +40,7 @@ void RobotKinematicsInterface::_callback_pose(const geometry_msgs::msg::PoseStam
     }
 }
 
-void RobotKinematicsInterface::_callback_reference_frame(const geometry_msgs::msg::PoseStamped &msg)
+void RobotKinematicsClient::_callback_reference_frame(const geometry_msgs::msg::PoseStamped &msg)
 {
     reference_frame_ = geometry_msgs_pose_stamped_to_dq(msg);
 }
@@ -53,7 +53,7 @@ void RobotKinematicsInterface::_callback_reference_frame(const geometry_msgs::ms
 //}
 //#endif
 
-RobotKinematicsInterface::RobotKinematicsInterface(const std::shared_ptr<Node> &node, const std::string &topic_prefix):
+RobotKinematicsClient::RobotKinematicsClient(const std::shared_ptr<Node> &node, const std::string &topic_prefix):
     sas::Object("RobotKinematicsClient"),
     node_(node),
     enabled_(false),
@@ -71,22 +71,22 @@ RobotKinematicsInterface::RobotKinematicsInterface(const std::shared_ptr<Node> &
 
     //subscriber_pose_ = node_handle_subscriber.subscribe(topic_prefix + "/get/pose", 1, &RobotKinematicsInterface::_callback_pose, this);
     subscriber_pose_ = node->create_subscription<geometry_msgs::msg::PoseStamped>(
-                topic_prefix + "/get/pose", 1, std::bind(&RobotKinematicsInterface::_callback_pose, this, _1)
+                topic_prefix + "/get/pose", 1, std::bind(&RobotKinematicsClient::_callback_pose, this, _1)
                 );
     //subscriber_reference_frame_ = node_handle_subscriber.subscribe(topic_prefix + "/get/reference_frame", 1, &RobotKinematicsInterface::_callback_reference_frame, this);
     subscriber_reference_frame_ = node->create_subscription<geometry_msgs::msg::PoseStamped>(
-                topic_prefix + "/get/reference_frame", 1, std::bind(&RobotKinematicsInterface::_callback_reference_frame, this, _1)
+                topic_prefix + "/get/reference_frame", 1, std::bind(&RobotKinematicsClient::_callback_reference_frame, this, _1)
                 );
 }
 
 
-bool RobotKinematicsInterface::is_enabled() const
+bool RobotKinematicsClient::is_enabled() const
 {
     return( is_unit(pose_) &&
             is_unit(reference_frame_));
 }
 
-DQ RobotKinematicsInterface::get_pose() const
+DQ RobotKinematicsClient::get_pose() const
 {
     if(is_enabled())
     {
@@ -98,7 +98,7 @@ DQ RobotKinematicsInterface::get_pose() const
     }
 }
 
-DQ RobotKinematicsInterface::get_reference_frame() const
+DQ RobotKinematicsClient::get_reference_frame() const
 {
     if(is_enabled())
     {
@@ -108,12 +108,12 @@ DQ RobotKinematicsInterface::get_reference_frame() const
         throw std::runtime_error("::"+get_class_name()+"::get_reference_frame()::trying to get reference frame but uninitialized.");
 }
 
-void RobotKinematicsInterface::send_desired_pose(const DQ &desired_pose) const
+void RobotKinematicsClient::send_desired_pose(const DQ &desired_pose) const
 {
     publisher_desired_pose_->publish(dq_to_geometry_msgs_pose_stamped(desired_pose));
 }
 
-void RobotKinematicsInterface::send_desired_interpolator_speed(const double &interpolator_speed) const
+void RobotKinematicsClient::send_desired_interpolator_speed(const double &interpolator_speed) const
 {
     publisher_desired_interpolator_speed_->publish(double_to_std_msgs_float64(interpolator_speed));
 }
