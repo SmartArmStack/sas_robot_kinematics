@@ -22,4 +22,4 @@
 #
 # ################################################################
 """
-from _sas_robot_kinematics import RobotKinematicsInterface, RobotKinematicsProvider
+from sas_robot_kinematics._sas_robot_kinematics import RobotKinematicsClient, RobotKinematicsServer
