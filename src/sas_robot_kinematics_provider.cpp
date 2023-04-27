@@ -29,12 +29,12 @@ using std::placeholders::_1;
 namespace sas
 {
 
-void RobotKinematicsProvider::_callback_desired_pose(const geometry_msgs::msg::PoseStamped &msg)
+void RobotKinematicsServer::_callback_desired_pose(const geometry_msgs::msg::PoseStamped &msg)
 {
     desired_pose_ = geometry_msgs_pose_to_dq(msg.pose);
 }
 
-void RobotKinematicsProvider::_callback_desired_interpolator_speed(const sas_msgs::msg::Float64 &msg)
+void RobotKinematicsServer::_callback_desired_interpolator_speed(const sas_msgs::msg::Float64 &msg)
 {
     desired_interpolator_speed_ = std_msgs_float64_to_double(msg);
 }
@@ -47,7 +47,7 @@ void RobotKinematicsProvider::_callback_desired_interpolator_speed(const sas_msg
 //}
 //#endif
 
-RobotKinematicsProvider::RobotKinematicsProvider(const std::shared_ptr<Node> &node, const std::string &topic_prefix):
+RobotKinematicsServer::RobotKinematicsServer(const std::shared_ptr<Node> &node, const std::string &topic_prefix):
     sas::Object("RobotKinematicsServer"),
     node_(node),
     enabled_(false),
@@ -64,20 +64,20 @@ RobotKinematicsProvider::RobotKinematicsProvider(const std::shared_ptr<Node> &no
 
     //subscriber_desired_pose_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_pose", 1, &RobotKinematicsProvider::_callback_desired_pose, this);
     subscriber_desired_pose_ = node->create_subscription<geometry_msgs::msg::PoseStamped>(
-                topic_prefix + "/set/desired_pose", 1, std::bind(&RobotKinematicsProvider::_callback_desired_pose, this, _1)
+                topic_prefix + "/set/desired_pose", 1, std::bind(&RobotKinematicsServer::_callback_desired_pose, this, _1)
                 );
     //subscriber_desired_interpolator_speed_ = nodehandle_subscriber.subscribe(topic_prefix + "/set/desired_interpolator_speed", 1, &RobotKinematicsProvider::_callback_desired_interpolator_speed, this);
     subscriber_desired_interpolator_speed_ = node->create_subscription<sas_msgs::msg::Float64>(
-                topic_prefix + "/set/desired_interpolator_speed", 1, std::bind(&RobotKinematicsProvider::_callback_desired_interpolator_speed, this, _1)
+                topic_prefix + "/set/desired_interpolator_speed", 1, std::bind(&RobotKinematicsServer::_callback_desired_interpolator_speed, this, _1)
                 );
 }
 
-bool RobotKinematicsProvider::is_enabled() const
+bool RobotKinematicsServer::is_enabled() const
 {
     return is_unit(desired_pose_);
 }
 
-DQ RobotKinematicsProvider::get_desired_pose() const
+DQ RobotKinematicsServer::get_desired_pose() const
 {
     if(is_enabled())
     {
@@ -89,17 +89,17 @@ DQ RobotKinematicsProvider::get_desired_pose() const
     }
 }
 
-double RobotKinematicsProvider::get_desired_interpolator_speed() const
+double RobotKinematicsServer::get_desired_interpolator_speed() const
 {
     return desired_interpolator_speed_;
 }
 
-void RobotKinematicsProvider::send_pose(const DQ &pose) const
+void RobotKinematicsServer::send_pose(const DQ &pose) const
 {
     publisher_pose_->publish(dq_to_geometry_msgs_pose_stamped(pose));
 }
 
-void RobotKinematicsProvider::send_reference_frame(const DQ &reference_frame) const
+void RobotKinematicsServer::send_reference_frame(const DQ &reference_frame) const
 {
     publisher_reference_frame_->publish(sas::dq_to_geometry_msgs_pose_stamped(reference_frame));
 }

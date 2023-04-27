@@ -37,7 +37,7 @@ using namespace DQ_robotics;
 
 namespace sas
 {
-class RobotKinematicsInterface: private sas::Object
+class RobotKinematicsClient: private sas::Object
 {
 private:
     std::shared_ptr<Node> node_;
@@ -56,13 +56,13 @@ private:
     void _callback_pose(const geometry_msgs::msg::PoseStamped& msg);
     void _callback_reference_frame(const geometry_msgs::msg::PoseStamped& msg);
 public:
-    RobotKinematicsInterface()=delete;
-    RobotKinematicsInterface(const RobotKinematicsInterface&)=delete;
+    RobotKinematicsClient()=delete;
+    RobotKinematicsClient(const RobotKinematicsClient&)=delete;
 
 //#ifdef IS_SAS_PYTHON_BUILD
 //    RobotKinematicsInterface(const std::string& topic_prefix);
 //#endif
-    RobotKinematicsInterface(const std::shared_ptr<Node> &node, const std::string& topic_prefix);
+    RobotKinematicsClient(const std::shared_ptr<Node> &node, const std::string& topic_prefix);
 
     bool is_enabled() const;
     DQ get_pose() const;
