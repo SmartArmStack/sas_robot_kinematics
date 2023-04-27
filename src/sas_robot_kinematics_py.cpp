@@ -27,8 +27,8 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include <sas_robot_kinematics/sas_robot_kinematics_interface.h>
-#include <sas_robot_kinematics/sas_robot_kinematics_provider.h>
+#include <sas_robot_kinematics/sas_robot_kinematics_client.hpp>
+#include <sas_robot_kinematics/sas_robot_kinematics_server.hpp>
 
 namespace py = pybind11;
 using RKC = sas::RobotKinematicsClient;

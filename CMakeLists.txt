@@ -19,8 +19,8 @@ find_package(Eigen3 REQUIRED)
 ##### CPP LIBRARY #####
 
 add_library(${PROJECT_NAME} SHARED
-    src/sas_robot_kinematics_interface.cpp
-    src/sas_robot_kinematics_provider.cpp
+    src/sas_robot_kinematics_client.cpp
+    src/sas_robot_kinematics_server.cpp
     )
 
 ament_target_dependencies(${PROJECT_NAME} rclcpp geometry_msgs std_msgs sas_msgs sas_common sas_core sas_conversions)
@@ -58,7 +58,7 @@ install(
 
 ament_python_install_package(${PROJECT_NAME})
 
-pybind11_add_module(_sas_robot_driver SHARED src/sas_robot_kinematics_py.cpp src/sas_robot_kinematics_interface.cpp src/sas_robot_kinematics_provider.cpp)
+pybind11_add_module(_sas_robot_driver SHARED src/sas_robot_kinematics_py.cpp src/sas_robot_kinematics_client.cpp src/sas_robot_kinematics_server.cpp)
 
 target_include_directories(_sas_robot_driver
   PUBLIC
