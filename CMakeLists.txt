@@ -16,7 +16,7 @@ find_package(sas_msgs REQUIRED)
 find_package(sas_conversions REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-##### LIBRARY #####
+##### CPP LIBRARY #####
 
 add_library(${PROJECT_NAME} SHARED
     src/sas_robot_kinematics_interface.cpp
@@ -52,4 +52,25 @@ install(
     INCLUDES DESTINATION include
     )
 
-##END## LIBRARY #####
+##END## CPP LIBRARY #####
+
+##### PYBIND11 LIBRARY #####
+
+ament_python_install_package(${PROJECT_NAME})
+
+pybind11_add_module(_sas_robot_driver SHARED src/sas_robot_kinematics_py.cpp src/sas_robot_kinematics_interface.cpp src/sas_robot_kinematics_provider.cpp)
+
+target_include_directories(_sas_robot_driver
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
+target_compile_definitions(_sas_robot_driver PRIVATE IS_SAS_PYTHON_BUILD)
+# https://github.com/pybind/pybind11/issues/387
+target_link_libraries(_sas_robot_driver PRIVATE ${PROJECT_NAME} -ldqrobotics)
+
+install(TARGETS _sas_robot_driver
+  DESTINATION "${PYTHON_INSTALL_DIR}/${PROJECT_NAME}"
+)
+
+##END## PYBIND11 LIBRARY #####
