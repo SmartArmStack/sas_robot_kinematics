@@ -25,29 +25,31 @@
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 
+#include <rclcpp/rclcpp.hpp>
+
 #include <sas_robot_kinematics/sas_robot_kinematics_interface.h>
 #include <sas_robot_kinematics/sas_robot_kinematics_provider.h>
 
 namespace py = pybind11;
-using RKI = sas::RobotKinematicsInterface;
-using RKP = sas::RobotKinematicsProvider;
+using RKC = sas::RobotKinematicsInterface;
+using RKS = sas::RobotKinematicsProvider;
 
 PYBIND11_MODULE(_sas_robot_kinematics, m) {
 
-    py::class_<RKI>(m, "RobotKinematicsInterface")
-            .def(py::init<const std::string&>())
-            .def("is_enabled",&RKI::is_enabled)
-            .def("get_pose",&RKI::get_pose)
-            .def("get_reference_frame",&RKI::get_reference_frame)
-            .def("send_desired_pose",&RKI::send_desired_pose)
-            .def("send_desired_interpolator_speed",&RKI::send_desired_interpolator_speed);
+    py::class_<RKC>(m, "RobotKinematicsClient")
+            .def(py::init<const std::shared_ptr<rclcpp::Node>&,const std::string&>())
+            .def("is_enabled",&RKC::is_enabled)
+            .def("get_pose",&RKC::get_pose)
+            .def("get_reference_frame",&RKC::get_reference_frame)
+            .def("send_desired_pose",&RKC::send_desired_pose)
+            .def("send_desired_interpolator_speed",&RKC::send_desired_interpolator_speed);
 
-    py::class_<RKP>(m, "RobotKinematicsProvider")
-            .def(py::init<const std::string&>())
-            .def("get_desired_pose",&RKP::get_desired_pose)
-            .def("get_desired_interpolator_speed",&RKP::get_desired_interpolator_speed)
-            .def("is_enabled",&RKP::is_enabled)
-            .def("send_pose",&RKP::send_pose)
-            .def("send_reference_frame",&RKP::send_reference_frame);
+    py::class_<RKS>(m, "RobotKinematicsServer")
+            .def(py::init<const std::shared_ptr<rclcpp::Node>&,const std::string&>())
+            .def("get_desired_pose",&RKS::get_desired_pose)
+            .def("get_desired_interpolator_speed",&RKS::get_desired_interpolator_speed)
+            .def("is_enabled",&RKS::is_enabled)
+            .def("send_pose",&RKS::send_pose)
+            .def("send_reference_frame",&RKS::send_reference_frame);
 
 }
