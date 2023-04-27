@@ -1,6 +1,6 @@
 #pragma once
 /*
-# Copyright (c) 2020-2022 Murilo Marques Marinho
+# Copyright (c) 2020-2023 Murilo Marques Marinho
 #
 #    This file is part of sas_robot_kinematics.
 #
@@ -27,33 +27,35 @@
 
 #include <dqrobotics/DQ.h>
 
-#include <ros/ros.h>
-#include <ros/callback_queue.h>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <sas_core/sas_object.hpp>
+#include <sas_msgs/msg/float64.hpp>
 
-#include <geometry_msgs/PoseStamped.h>
-#include <std_msgs/Float64.h>
-
+using namespace rclcpp;
 using namespace DQ_robotics;
 
 namespace sas
 {
 
-class RobotKinematicsProvider
+class RobotKinematicsProvider: private sas::Object
 {
 protected:
+    std::shared_ptr<Node> node_;
+
     std::atomic_bool enabled_;
     const std::string topic_prefix_;
 
-    ros::Publisher publisher_pose_;
-    ros::Publisher publisher_reference_frame_;
+    Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_pose_;
+    Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_reference_frame_;
 
-    ros::Subscriber subscriber_desired_pose_;
+    Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscriber_desired_pose_;
     DQ desired_pose_;
-    ros::Subscriber subscriber_desired_interpolator_speed_;
+    Subscription<sas_msgs::msg::Float64>::SharedPtr subscriber_desired_interpolator_speed_;
     double desired_interpolator_speed_;
 
-    void _callback_desired_pose(const geometry_msgs::PoseStamped::ConstPtr& msg);
-    void _callback_desired_interpolator_speed(const std_msgs::Float64::ConstPtr& msg);
+    void _callback_desired_pose(const geometry_msgs::msg::PoseStamped& msg);
+    void _callback_desired_interpolator_speed(const sas_msgs::msg::Float64& msg);
 public:
     RobotKinematicsProvider()=delete;
     RobotKinematicsProvider(const RobotKinematicsProvider&)=delete;
@@ -61,8 +63,7 @@ public:
 #ifdef IS_SAS_PYTHON_BUILD
     RobotKinematicsProvider(const std::string& topic_prefix);
 #endif
-    RobotKinematicsProvider(ros::NodeHandle& node_handle, const std::string& topic_prefix);
-    RobotKinematicsProvider(ros::NodeHandle& node_handle_publisher, ros::NodeHandle& node_handle_subscriber, const std::string& topic_prefix);
+    RobotKinematicsProvider(const std::shared_ptr<Node>& node, const std::string& topic_prefix);
 
     DQ get_desired_pose() const;
     double get_desired_interpolator_speed() const;

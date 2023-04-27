@@ -1,6 +1,6 @@
 #pragma once
 /*
-# Copyright (c) 2020-2022 Murilo Marques Marinho
+# Copyright (c) 2020-2023 Murilo Marques Marinho
 #
 #    This file is part of sas_robot_kinematics.
 #
@@ -25,39 +25,44 @@
 
 #include <atomic>
 
-#include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <std_msgs/Float64.h>
 #include <dqrobotics/DQ.h>
+
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <sas_core/sas_object.hpp>
+#include <sas_msgs/msg/float64.hpp>
+
+using namespace rclcpp;
 using namespace DQ_robotics;
 
 namespace sas
 {
-class RobotKinematicsInterface
+class RobotKinematicsInterface: private sas::Object
 {
 private:
+    std::shared_ptr<Node> node_;
+
     std::atomic_bool enabled_;
     const std::string topic_prefix_;
 
-    ros::Subscriber subscriber_pose_;
+    Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscriber_pose_;
     DQ pose_;
-    ros::Subscriber subscriber_reference_frame_;
+    Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscriber_reference_frame_;
     DQ reference_frame_;
 
-    ros::Publisher publisher_desired_pose_;
-    ros::Publisher publisher_desired_interpolator_speed_;
+    Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_desired_pose_;
+    Publisher<sas_msgs::msg::Float64>::SharedPtr publisher_desired_interpolator_speed_;
 
-    void _callback_pose(const geometry_msgs::PoseStamped::ConstPtr& msg);
-    void _callback_reference_frame(const geometry_msgs::PoseStamped& msg);
+    void _callback_pose(const geometry_msgs::msg::PoseStamped& msg);
+    void _callback_reference_frame(const geometry_msgs::msg::PoseStamped& msg);
 public:
     RobotKinematicsInterface()=delete;
     RobotKinematicsInterface(const RobotKinematicsInterface&)=delete;
 
-#ifdef IS_SAS_PYTHON_BUILD
-    RobotKinematicsInterface(const std::string& topic_prefix);
-#endif
-    RobotKinematicsInterface(ros::NodeHandle& node_handle, const std::string& topic_prefix);
-    RobotKinematicsInterface(ros::NodeHandle& node_handle_publisher, ros::NodeHandle& node_handle_subscriber, const std::string& topic_prefix);
+//#ifdef IS_SAS_PYTHON_BUILD
+//    RobotKinematicsInterface(const std::string& topic_prefix);
+//#endif
+    RobotKinematicsInterface(const std::shared_ptr<Node> &node, const std::string& topic_prefix);
 
     bool is_enabled() const;
     DQ get_pose() const;
