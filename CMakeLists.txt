@@ -74,3 +74,5 @@ install(TARGETS _${PROJECT_NAME}
 )
 
 ##END## PYBIND11 LIBRARY #####
+
+ament_package()
