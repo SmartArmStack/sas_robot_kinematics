@@ -5,7 +5,6 @@ services:
       - ../../sas_robot_kinematics:/root/sas_robot_kinematics_devel/src/sas_robot_kinematics
     command: /bin/bash -c "
       cd /root/sas_robot_kinematics_devel/src/
-      #&& apt-cache policy pybind11-dev
       && ls .
       && colcon build
       && source install/setup.bash
