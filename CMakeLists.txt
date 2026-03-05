@@ -75,4 +75,17 @@ install(TARGETS _${PROJECT_NAME}
 
 ##END## PYBIND11 LIBRARY #####
 
+#########################
+# Scripts Block [BEGIN] #
+# vvvvvvvvvvvvvvvvvvvvv #
+# https://ros2-tutorial.readthedocs.io/en/latest/
+install(DIRECTORY
+        scripts/
+        FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+        DESTINATION lib/${PROJECT_NAME}
+)
+# ^^^^^^^^^^^^^^^^^^^ #
+# Scripts Block [END] #
+#######################
+
 ament_package()
