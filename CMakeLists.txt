@@ -5,15 +5,20 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-#find_package(pybind11 REQUIRED)
-# Using newer version of pybind11 because of dqrobotics python.
-include(FetchContent)
+#################################
+# pybind11 import block [BEGIN] #
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvv #
+set(PYBIND11_FINDPYTHON ON) # Fix CMP0148 Warning. https://github.com/pybind/pybind11/issues/4785
+include(FetchContent) #Use pybind11 v3.0 for compatibility with dqrobotics.
 FetchContent_Declare(
   pybind11
   GIT_REPOSITORY https://github.com/pybind/pybind11.git
-  GIT_TAG        v3.0.2
+  GIT_TAG        v3.0
 )
 FetchContent_MakeAvailable(pybind11)
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^ #
+# pybind11 import block [END] #
+###############################
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
