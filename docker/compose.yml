@@ -1,0 +1,11 @@
+services:
+  sas_robot_kinematics:
+    build: .
+    volumes:
+      - ../../sas_robot_kinematics:/root/sas_robot_kinematics_devel/src/sas_robot_kinematics
+    command: /bin/bash -c "
+      cd /root/sas_robot_kinematics_devel/src/
+      && ls .
+      && colcon build
+      && source install/setup.bash
+      && ros2 run sas_robot_kinematics sas_robot_kinematics_interface_example.py"
