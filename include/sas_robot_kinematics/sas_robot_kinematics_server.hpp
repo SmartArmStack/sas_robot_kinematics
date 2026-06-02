@@ -37,7 +37,14 @@ using namespace DQ_robotics;
 
 namespace sas
 {
-
+/**
+ * @class RobotKinematicsServer
+ * @brief Server for robot kinematics topics.
+ *
+ * Publishes the robot's current pose and reference frame, and subscribes to
+ * desired poses and desired interpolator speeds. The server stores the most
+ * recently received desired values and exposes accessors for them.
+ */
 class RobotKinematicsServer: private sas::Object
 {
 protected:
@@ -63,14 +70,45 @@ public:
 #ifdef IS_SAS_PYTHON_BUILD
     RobotKinematicsServer(const std::string& topic_prefix);
 #endif
+
+    /**
+     * @brief Construct a RobotKinematicsServer.
+     *
+     * @param node Shared pointer to the ROS2 node used for creating
+     *             publishers/subscribers.
+     * @param topic_prefix Topic name prefix used for subscriptions and
+     *                     publications.
+     */
     RobotKinematicsServer(const std::shared_ptr<Node>& node, const std::string& topic_prefix);
 
+    /**
+     * @brief Get the most recently received desired pose.
+     * @return Desired pose as a dual quaternion (DQ).
+     */
     DQ get_desired_pose() const;
+
+    /**
+     * @brief Get the most recently received desired interpolator speed.
+     * @return Desired interpolator speed as a double.
+     */
     double get_desired_interpolator_speed() const;
 
+    /**
+     * @brief Check whether the server is enabled (publishers/subscribers active).
+     * @return true if enabled, false otherwise.
+     */
     bool is_enabled() const;
 
+    /**
+     * @brief Publish the current robot pose.
+     * @param pose Pose to publish (as DQ).
+     */
     void send_pose(const DQ& pose) const;
+
+    /**
+     * @brief Publish the robot's reference frame pose.
+     * @param reference_frame Reference frame to publish (as DQ).
+     */
     void send_reference_frame(const DQ& reference_frame) const;
 
 };

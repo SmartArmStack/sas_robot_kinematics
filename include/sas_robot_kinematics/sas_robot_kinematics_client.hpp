@@ -37,6 +37,15 @@ using namespace DQ_robotics;
 
 namespace sas
 {
+/**
+ * @class RobotKinematicsClient
+ * @brief Client for robot kinematics.
+ *
+ * Subscribes to the robot's current pose and reference frame, and provides
+ * methods to publish desired poses and desired interpolator speeds. The
+ * client tracks the most recently received pose and reference frame and
+ * exposes simple accessors to retrieve them.
+ */
 class RobotKinematicsClient: private sas::Object
 {
 private:
@@ -62,12 +71,45 @@ public:
 //#ifdef IS_SAS_PYTHON_BUILD
 //    RobotKinematicsInterface(const std::string& topic_prefix);
 //#endif
+    /**
+     * @brief Construct a RobotKinematicsClient.
+     *
+     * @param node Shared pointer to the ROS2 node used for creating
+     *             publishers/subscribers.
+     * @param topic_prefix Topic name prefix used for subscriptions and
+     *                     publications.
+     */
     RobotKinematicsClient(const std::shared_ptr<Node> &node, const std::string& topic_prefix);
 
+    /**
+     * @brief Check whether the client is enabled (subscribers/publishers active).
+     * @return true if enabled, false otherwise.
+     */
     bool is_enabled() const;
+
+    /**
+     * @brief Get the last received robot pose.
+     * @return Current pose as a dual quaternion (DQ).
+     */
     DQ get_pose() const;
+
+    /**
+     * @brief Get the last received reference frame pose.
+     * @return Reference frame as a dual quaternion (DQ).
+     */
     DQ get_reference_frame() const;
+
+    /**
+     * @brief Publish a desired pose for the robot.
+     * @param desired_pose Desired pose to publish (as DQ).
+     */
     void send_desired_pose(const DQ& desired_pose) const;
+
+    /**
+     * @brief Publish a desired interpolator speed value.
+     * @param interpolator_speed Desired interpolator speed (units depend on
+     *                           the consumer of this topic).
+     */
     void send_desired_interpolator_speed(const double& interpolator_speed) const;
 };
 }
