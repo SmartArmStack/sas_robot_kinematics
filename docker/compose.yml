@@ -1,8 +1,8 @@
 services:
   sas_robot_kinematics:
-    build: .
-    volumes:
-      - ../../sas_robot_kinematics:/root/sas_robot_kinematics_devel/src/sas_robot_kinematics
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     command: /bin/bash -c "
       cd /root/sas_robot_kinematics_devel/src/
       && ls .
