@@ -53,7 +53,7 @@ void RobotKinematicsClient::_callback_reference_frame(const geometry_msgs::msg::
 //}
 //#endif
 
-RobotKinematicsClient::RobotKinematicsClient(const std::shared_ptr<Node> &node, const std::string &topic_prefix):
+RobotKinematicsClient::RobotKinematicsClient(const std::shared_ptr<rclcpp::Node> &node, const std::string &topic_prefix):
     sas::Object("RobotKinematicsClient"),
     node_(node),
     enabled_(false),

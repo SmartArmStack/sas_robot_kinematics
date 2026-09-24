@@ -47,7 +47,7 @@ void RobotKinematicsServer::_callback_desired_interpolator_speed(const sas_msgs:
 //}
 //#endif
 
-RobotKinematicsServer::RobotKinematicsServer(const std::shared_ptr<Node> &node, const std::string &topic_prefix):
+RobotKinematicsServer::RobotKinematicsServer(const std::shared_ptr<rclcpp::Node> &node, const std::string &topic_prefix):
     sas::Object("RobotKinematicsServer"),
     node_(node),
     enabled_(false),

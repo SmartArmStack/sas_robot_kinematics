@@ -32,7 +32,6 @@
 #include <sas_core/sas_object.hpp>
 #include <sas_msgs/msg/float64.hpp>
 
-using namespace rclcpp;
 using namespace DQ_robotics;
 
 namespace sas
@@ -48,17 +47,17 @@ namespace sas
 class RobotKinematicsServer: private sas::Object
 {
 protected:
-    std::shared_ptr<Node> node_;
+    std::shared_ptr<rclcpp::Node> node_;
 
     std::atomic_bool enabled_;
     const std::string topic_prefix_;
 
-    Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_pose_;
-    Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_reference_frame_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_pose_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_reference_frame_;
 
-    Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscriber_desired_pose_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscriber_desired_pose_;
     DQ desired_pose_;
-    Subscription<sas_msgs::msg::Float64>::SharedPtr subscriber_desired_interpolator_speed_;
+    rclcpp::Subscription<sas_msgs::msg::Float64>::SharedPtr subscriber_desired_interpolator_speed_;
     double desired_interpolator_speed_;
 
     void _callback_desired_pose(const geometry_msgs::msg::PoseStamped& msg);
@@ -79,7 +78,7 @@ public:
      * @param topic_prefix Topic name prefix used for subscriptions and
      *                     publications.
      */
-    RobotKinematicsServer(const std::shared_ptr<Node>& node, const std::string& topic_prefix);
+    RobotKinematicsServer(const std::shared_ptr<rclcpp::Node>& node, const std::string& topic_prefix);
 
     /**
      * @brief Get the most recently received desired pose.
