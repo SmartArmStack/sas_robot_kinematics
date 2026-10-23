@@ -12,10 +12,16 @@
   <depend>rclcpp</depend>
   <depend>geometry_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>eigen</depend>
   <depend>sas_core</depend>
   <depend>sas_common</depend>
   <depend>sas_msgs</depend>
   <depend>sas_conversions</depend>
+
+  <!-- dqrobotics (C++ libdqrobotics and the `dqrobotics` Python bindings used
+       by the installed example script) has no rosdep key; it comes from the DQ
+       Robotics PPA and PyPI (see
+       https://github.com/marinholab/docker_recipes). -->
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
