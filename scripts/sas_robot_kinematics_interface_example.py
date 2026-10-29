@@ -24,6 +24,7 @@
 # #######################################################################################
 """
 import time
+
 from dqrobotics import *  # Despite what PyCharm might say, this is very much necessary or DQs will not be recognized
 
 from sas_common import rclcpp_init, rclcpp_Node, rclcpp_spin_some
